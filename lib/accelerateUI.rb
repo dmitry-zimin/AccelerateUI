@@ -88,15 +88,14 @@ class AccelerateUI
   # Пересчитываем количество вхождений каждого id в массиве и пересчитав его перезаполняю массив @id_array
   def count_entries
     temp_array = []
-    unless @id_array.empty?
-      @id_array.each do |id|
-        temp_array << { name: id, count: @id_array.count(id) }
-        @id_array.delete(id)
-      end
 
-      @id_array.each { |id| temp_array << { name: id, count: 1 } }
-      @id_array = temp_array
+    until @id_array.empty? do
+      element = @id_array.first
+      temp_array << { name: element, count: @id_array.count(element) }
+      @id_array.delete(element)
     end
+
+    @id_array = temp_array
   end
 
   # Тут мы будем переписывать старый файл новым значением. Его нам вернет генератор.
