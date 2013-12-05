@@ -11,13 +11,7 @@ class AccelerateUI
     @style_dir = 'app/assets/stylesheets'
 
     #TODO: Refactor for call function which will return variables by param. For example - js, css, html.
-    #'js_parser'.split('_').map{|e| e.capitalize}.join('')
-    @js_parser = JsParser.new
-    @css_parser = CssParser.new
-    @html_parser = HtmlParser.new
-    @js_generator = JsGenerator.new
-    @css_generator = CssGenerator.new
-    @html_generator = HtmlGenerator.new
+    work_file_variable("lib/parsers", "lib/generators")
   end
 
   # Основная функция которая делает всю обработку
@@ -96,6 +90,16 @@ class AccelerateUI
     end
 
     @id_array = temp_array
+  end
+
+  # Заводим переменные для всех рабочих файлов(пока только парсеры и генераторы)
+  # Внутрь передается список элементов и внутри пробегаясь ичем создаются все необходимые
+  def work_file_variable(*work_files_path)
+    work_files_path.each do |path|
+      work_files = []
+      Dir.foreach("#{Rails.root}/#{path}"){ |file| work_files << file.split('.rb').first unless File.directory?(file) }
+      work_files.each { |parser| instance_variable_set("@#{parser}", parser.humanize.titleize.delete(' ').constantize.new) }
+    end
   end
 
   # Тут мы будем переписывать старый файл новым значением. Его нам вернет генератор.
