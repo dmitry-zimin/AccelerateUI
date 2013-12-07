@@ -44,7 +44,11 @@ class AccelerateUI
     sorted_array_by_entries
     added_new_ids
 
-    @id_array
+    @js_files.each do |file|
+      # Тут вызов генератора нада добавить для замены айдишников
+      full_path = "#{@js_dir}/#{file}"
+      @js_generator.id_generator(full_path, @id_array)
+    end
   end
 
   # Получаем список js-файлов
@@ -74,7 +78,7 @@ class AccelerateUI
     new_name = 'a'
 
     @id_array.each do |array_element|
-      array_element[:new_name] = new_name
+      array_element[:new_name] = "##{new_name}"
       new_name = new_name.next
     end unless @id_array.empty?
   end
@@ -100,11 +104,5 @@ class AccelerateUI
       Dir.foreach("#{Rails.root}/#{path}"){ |file| work_files << file.split('.rb').first unless File.directory?(file) }
       work_files.each { |parser| instance_variable_set("@#{parser}", parser.humanize.titleize.delete(' ').constantize.new) }
     end
-  end
-
-  # Тут мы будем переписывать старый файл новым значением. Его нам вернет генератор.
-  def rewrite_file
-    #file.write("")
-    #file.close
   end
 end
