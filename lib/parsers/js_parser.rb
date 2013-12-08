@@ -5,7 +5,7 @@ class JsParser
   end
 
   def id_parser(file_content)
-    @id_array = file_content.scan(/#[^']*/)
+    @id_array = file_content.scan(/#[^'".\s]*/)
   end
 
   def class_parser(file_content)
